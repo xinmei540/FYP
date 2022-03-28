@@ -2,8 +2,15 @@ using System.Collections;
 using System.Collections.Generic;
 using UnityEngine;
 
+public enum PlayerState{
+    walk,
+    attack,
+    interact
+}
+
 public class PlayerControl : MonoBehaviour
 {
+    public PlayerState currentState;
 
     public float speed = 5f;
 
@@ -18,6 +25,9 @@ public class PlayerControl : MonoBehaviour
 
     public GameObject MyBag;
     private bool isOpen;
+
+    public Inventory playerInventory;
+    public SpriteRenderer getItemSprite;
     // Start is called before the first frame update
     void Start()
     {
@@ -45,7 +55,34 @@ public class PlayerControl : MonoBehaviour
 
         CurrentInput = movement;
 
+        if(Input.GetKeyDown(KeyCode.Z) && currentState != PlayerState.attack)
+        {
+            StartCoroutine(Attack());
+        }
+
         OpenMyBag();
+    }
+
+    public void RaiseItem()
+    {
+        if (currentState != PlayerState.interact)
+        {
+            getItemSprite.sprite = playerInventory.itemName.itemImage;
+        }
+        else
+        {
+            getItemSprite.sprite = null;
+        }
+    }
+
+    private IEnumerator Attack()
+    {
+        Ani.SetBool("Attack", true);
+        currentState = PlayerState.attack;
+        yield return null;
+        Ani.SetBool("Attack", false);
+        yield return new WaitForSeconds(.3f);
+        currentState = PlayerState.walk;
     }
 
     private void FixedUpdate()

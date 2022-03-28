@@ -34,6 +34,7 @@ public class InventoryMange : MonoBehaviour
         instance.itemInformation.text = itemDescription;
     }
 
+
     /*public static void CreateNewItem(Item item)
     {
         ItemSlot newItem = Instantiate(instance.itemPrefab, instance.grid.transform.position, Quaternion.identity);
